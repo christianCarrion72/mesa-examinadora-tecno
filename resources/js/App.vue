@@ -2,38 +2,26 @@
   <div class="app">
     <header>
       <h1>Laravel 12 + Vue 3</h1>
-      <p>Ejemplo de navegación entre tres vistas hechas con Vue.</p>
+      <p>Ejemplo de navegación entre tres vistas con Inertia.</p>
     </header>
 
     <nav class="nav">
-      <button @click="goTo('/')">Inicio</button>
-      <button @click="goTo('/vista1')">Vista 1</button>
-      <button @click="goTo('/vista2')">Vista 2</button>
+      <button @click="goTo(route('home'))">Inicio</button>
+      <button @click="goTo(route('vista1'))">Vista 1</button>
+      <button @click="goTo(route('vista2'))">Vista 2</button>
     </nav>
 
     <main class="view">
-      <component :is="currentViewComponent" />
+      <slot />
     </main>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import HomeView from './views/HomeView.vue';
-import VistaUno from './views/VistaUno.vue';
-import VistaDos from './views/VistaDos.vue';
+import { router } from '@inertiajs/vue3';
 
-const path = ref(window.location.pathname);
-
-const currentViewComponent = computed(() => {
-  if (path.value === '/vista1') return VistaUno;
-  if (path.value === '/vista2') return VistaDos;
-  return HomeView;
-});
-
-const goTo = (target) => {
-  if (target === path.value) return;
-  window.location.href = target;
+const goTo = (url) => {
+  router.get(url);
 };
 </script>
 
@@ -67,13 +55,5 @@ header h1 {
 .nav button:hover {
   background: #42b883;
   color: white;
-}
-
-.view h2 {
-  margin-bottom: 0.5rem;
-}
-
-.view p {
-  margin: 0;
 }
 </style>
